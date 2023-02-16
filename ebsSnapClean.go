@@ -6,6 +6,7 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
+	"github.com/aws/aws-sdk-go/aws/client"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
 	"github.com/aws/aws-sdk-go/service/ec2/ec2iface"
@@ -136,8 +137,15 @@ func deleteSnapshot(client ec2iface.EC2API, snapshot string) {
 }
 func main() {
 
+	// Lot of snaps being deleted, retry when throttled
+	myRetryer := client.DefaultRetryer{
+		NumMaxRetries:    10,
+		MaxThrottleDelay: 10 * time.Second,
+	}
+
 	sess, err := session.NewSession(&aws.Config{
-		Region: aws.String("us-east-1"),
+		Region:  aws.String("us-east-1"),
+		Retryer: myRetryer,
 	})
 	ec2Client := ec2.New(sess)
 	seperateByDate(ec2Client)
