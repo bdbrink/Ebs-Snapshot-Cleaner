@@ -13,6 +13,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// pass in account ID to list all snaps belonging to that account
 func getSnapshots(client ec2iface.EC2API) (*ec2.DescribeSnapshotsOutput, error) {
 
 	input := &ec2.DescribeSnapshotsInput{
@@ -25,7 +26,7 @@ func getSnapshots(client ec2iface.EC2API) (*ec2.DescribeSnapshotsOutput, error) 
 			},
 		},
 		OwnerIds: []*string{
-			aws.String("217906394988"),
+			aws.String("Insert account ID"),
 		},
 	}
 
