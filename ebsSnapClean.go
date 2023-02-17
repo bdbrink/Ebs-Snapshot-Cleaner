@@ -80,7 +80,7 @@ func getAmi(client ec2iface.EC2API, snapshot string) bool {
 	return true
 }
 
-func seperateByDate(client ec2iface.EC2API) {
+func seperateByDate(client ec2iface.EC2API) bool {
 
 	oneMonth := time.Now().AddDate(0, -1, 0)
 	swg := sizedwaitgroup.New(25)
@@ -88,6 +88,7 @@ func seperateByDate(client ec2iface.EC2API) {
 	snapshots, err := getSnapshots(client)
 	if err != nil {
 		log.Errorf("Couldn't list snaps: %v", err)
+		return false
 	}
 
 	for _, snapshot := range snapshots.Snapshots {
@@ -107,10 +108,11 @@ func seperateByDate(client ec2iface.EC2API) {
 		}
 	}
 	swg.Wait()
+	return true
 
 }
 
-func deleteSnapshot(client ec2iface.EC2API, snapshot string) {
+func deleteSnapshot(client ec2iface.EC2API, snapshot string) bool {
 
 	input := &ec2.DeleteSnapshotInput{
 		SnapshotId: aws.String(snapshot),
@@ -130,10 +132,11 @@ func deleteSnapshot(client ec2iface.EC2API, snapshot string) {
 			// Message from an error.
 			fmt.Println(err.Error())
 		}
-		return
+		return false
 	}
 
 	log.Infof("%s has been deleted.", snapshot)
+	return true
 }
 func main() {
 
