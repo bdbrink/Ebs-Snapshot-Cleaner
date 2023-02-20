@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -36,10 +35,10 @@ func getSnapshots(client ec2iface.EC2API) (*ec2.DescribeSnapshotsOutput, error) 
 		if aerr, ok := err.(awserr.Error); ok {
 			switch aerr.Code() {
 			default:
-				fmt.Println(aerr.Error())
+				log.Errorln(aerr.Error())
 			}
 		} else {
-			fmt.Println(err.Error())
+			log.Errorln(err.Error())
 		}
 	}
 	return result, nil
@@ -63,12 +62,10 @@ func getAmi(client ec2iface.EC2API, snapshot string) bool {
 		if aerr, ok := err.(awserr.Error); ok {
 			switch aerr.Code() {
 			default:
-				fmt.Println(aerr.Error())
+				log.Errorln(aerr.Error())
 			}
 		} else {
-			// Print the error, cast err to awserr.Error to get the Code and
-			// Message from an error.
-			fmt.Println(err.Error())
+			log.Errorln(err.Error())
 		}
 		return false
 	}
@@ -119,12 +116,12 @@ func deleteSnapshot(client ec2iface.EC2API, snapshot string) bool {
 		if aerr, ok := err.(awserr.Error); ok {
 			switch aerr.Code() {
 			default:
-				fmt.Println(aerr.Error())
+				log.Errorln(aerr.Error())
 			case "InvalidSnapshot.InUse":
 				log.Infof("skipping %s because snapshot is in use \n", snapshot)
 			}
 		} else {
-			fmt.Println(err.Error())
+			log.Errorln(err.Error())
 		}
 		return false
 	}
@@ -148,7 +145,7 @@ func main() {
 	seperateByDate(ec2Client)
 
 	if err != nil {
-		fmt.Println("error my guy")
+		log.Errorln(err)
 	}
 
 }
