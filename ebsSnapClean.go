@@ -39,12 +39,9 @@ func getSnapshots(client ec2iface.EC2API) (*ec2.DescribeSnapshotsOutput, error) 
 				fmt.Println(aerr.Error())
 			}
 		} else {
-			// Print the error, cast err to awserr.Error to get the Code and
-			// Message from an error.
 			fmt.Println(err.Error())
 		}
 	}
-	//fmt.Println(result)
 	return result, nil
 }
 
@@ -76,7 +73,6 @@ func getAmi(client ec2iface.EC2API, snapshot string) bool {
 		return false
 	}
 
-	//fmt.Println(result)
 	return true
 }
 
@@ -92,7 +88,7 @@ func seperateByDate(client ec2iface.EC2API) bool {
 	}
 
 	for _, snapshot := range snapshots.Snapshots {
-		//log.Infof("Found snapshot: %s created at %s \n", *snapshot.SnapshotId, *snapshot.StartTime)
+		log.Infof("Found snapshot: %s created at %s \n", *snapshot.SnapshotId, *snapshot.StartTime)
 		snapshotDate := *snapshot.StartTime
 		if snapshotDate.Before(oneMonth) {
 			snapshotID := *snapshot.SnapshotId
@@ -128,8 +124,6 @@ func deleteSnapshot(client ec2iface.EC2API, snapshot string) bool {
 				log.Infof("skipping %s because snapshot is in use \n", snapshot)
 			}
 		} else {
-			// Print the error, cast err to awserr.Error to get the Code and
-			// Message from an error.
 			fmt.Println(err.Error())
 		}
 		return false
