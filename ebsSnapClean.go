@@ -26,6 +26,7 @@ func getSnapshots(client ec2iface.EC2API) (*ec2.DescribeSnapshotsOutput, error) 
 			},
 		},
 		OwnerIds: []*string{
+			// swap this out for the aws account ID this is running in
 			aws.String("Insert account ID"),
 		},
 	}
